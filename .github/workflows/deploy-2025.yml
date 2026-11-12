@@ -28,7 +28,7 @@ jobs:
       - name: Push to icc-ras-workshop 2025 repo
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ORG_DEPLOY_KEY }}
+          deploy_key: ${{ secrets.ORG_2025_DEPLOY_KEY }}
           publish_dir: ./dist
           external_repository: icc-ras-workshop/2025
           publish_branch: main
