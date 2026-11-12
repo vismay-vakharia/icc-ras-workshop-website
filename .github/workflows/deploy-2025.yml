@@ -29,6 +29,6 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ORG_2025_DEPLOY_KEY }}
-          publish_dir: ./dist
+          publish_dir: ./editions/2025/dist
           external_repository: icc-ras-workshop/2025
           publish_branch: main
