@@ -1,7 +1,10 @@
-name: Deploy to icc25-ras-workshop pages
+name: Deploy ICC RAS Workshop 2025 Website
 on:
   push:
     branches: [main]
+    paths:
+      - 'editions/2025/**'
+      - '.github/workflows/deploy-2025.yml'
 
 jobs:
   build-and-deploy:
@@ -14,17 +17,18 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 22
+          cache: npm
 
       - name: Install Dependencies
         run: npm install
 
       - name: Build site
-        run: npm run build
+        run: npm run build:2025
 
-      - name: Push to icc25-ras-workshop repo
+      - name: Push to icc-ras-workshop 2025 repo
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.ORG_DEPLOY_KEY }}
           publish_dir: ./dist
-          external_repository: icc25-ras-workshop/icc25-ras-workshop.github.io
+          external_repository: icc-ras-workshop/2025
           publish_branch: main

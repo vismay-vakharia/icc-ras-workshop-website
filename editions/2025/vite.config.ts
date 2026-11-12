@@ -3,6 +3,7 @@ import tailwindcss from "@tailwindcss/vite";
 import load from "vite-plugin-html-inject";
 
 export default defineConfig({
+  base: '/2025/',
   plugins: [tailwindcss(), load()],
   build: {
     rollupOptions: {
