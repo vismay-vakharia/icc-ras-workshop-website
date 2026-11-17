@@ -6,6 +6,7 @@
   ],
   "scripts": {
     "build:2025": "npm run build --workspace=ras-2025",
+    "build:2027": "npm run build --workspace=ras-2027",
     "build:all": "npm run build --workspaces"
   }
 }
