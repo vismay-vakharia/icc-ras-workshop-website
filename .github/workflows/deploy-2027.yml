@@ -1,0 +1,34 @@
+name: Deploy ICC RAS Workshop 2027 Website
+on:
+  push:
+    branches: [main]
+    paths:
+      - "editions/2027/**"
+      - ".github/workflows/deploy-2027.yml"
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build site
+        run: npm run build:2027
+
+      - name: Push to icc-ras-workshop 2027 repo
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ORG_2027_DEPLOY_KEY }}
+          publish_dir: ./editions/2027/dist
+          external_repository: icc-ras-workshop/2027
+          publish_branch: main
