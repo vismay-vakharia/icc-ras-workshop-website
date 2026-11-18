@@ -17,10 +17,15 @@ Checked against the repo on 2026-11-18.
 - **Portal is empty.** `editions/portal/index.html`, `editions/portal/vite.config.ts` and
   `.github/workflows/deploy-portal.yaml` are 0-byte placeholders; no `package.json`, so not a workspace and
   `build:all` skips it.
-- **2027 base is `/2027/`** (`editions/2027/vite.config.ts`), not `./`; the comment there is stale.
+- **2027 base is `/2027/`** (`editions/2027/vite.config.ts`), not `./`.
 - **Both editions are Tailwind v4.** 2025's `tailwind.config.ts` is an unused v3 leftover.
-- **Version split:** 2025 pins vite ^7 + typescript ~5.9; 2027 pins vite ^6 + typescript ^7. Plus the stray
-  `editions/2027/package-lock.json` / `node_modules`. Aligning these is known problem #1 in AGENTS.md.
+- **One Vite (7.x) for both editions**, hoisted at the root; `editions/2027/tsconfig.json` type-checks
+  `vite.config.ts` again. TypeScript is still split on purpose (2025 ~5.9, 2027 ^7); each workspace runs its own `tsc`.
+- **2025 is archived:** only dependency/vulnerability updates there. Its unused assets were moved to the gitignored
+  `archive/2025/` (kept locally, not deployed).
+- **`npm audit`** shows 4 high findings from one `picomatch` ReDoS advisory with no upstream fix (build-time only,
+  via vite → tinyglobby → fdir). Don't force overrides for it.
+- **CI** uses `npm ci`, so commit `package-lock.json` with any dependency change.
 - **Two different page architectures:**
   - 2025: multi-page HTML; shared header/footer are partials pulled in with `vite-plugin-html-inject`
     (`<load src="src/components/header.html" />`); data in `src/data/*.json`, rendered by `src/scripts/*.ts`.

@@ -104,7 +104,7 @@ function addSpeaker(speaker: Speaker) {
   node.innerHTML = speakerHTML;
 
   const img = node.querySelector<HTMLImageElement>(".object-cover")!;
-  img.src = `/images/${speaker.image}`;
+  img.src = `${import.meta.env.BASE_URL}images/${speaker.image}`;
   img.alt = speaker.name;
 
   node.querySelector<HTMLHeadingElement>("h4")!.textContent = speaker.name;
@@ -130,7 +130,7 @@ function addPanelist(speaker: Speaker) {
   card.innerHTML = panelistHTML;
 
   const img = card.querySelector<HTMLImageElement>(".object-cover")!;
-  img.src = `/images/${speaker.image}`;
+  img.src = `${import.meta.env.BASE_URL}images/${speaker.image}`;
   img.alt = speaker.name;
   card.querySelector<HTMLHeadingElement>("h3")!.textContent = speaker.name;
   card.querySelector<HTMLParagraphElement>("p")!.textContent = speaker.title;

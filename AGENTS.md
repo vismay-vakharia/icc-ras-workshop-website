@@ -36,6 +36,8 @@ One repo, several independent static websites, managed as npm workspaces.
 
 ## Known problems to fix first
 
+Items 1, 3 and 4 were fixed on 2026-11-18 (single Vite 7, `vite.config.ts` type-checked again, 2027 README removed). Item 2 turned out to be a non-issue: both editions are Tailwind v4.
+
 1. **Two copies of Vite.** `editions/2027` has its own `package-lock.json` (and likely its own `node_modules`) next
    to the root workspace install. That produced a `tsc` error in `vite.config.ts`: the `@tailwindcss/vite` plugin was
    typed against one Vite copy and `defineConfig` against the other. Fix: delete `editions/2027/node_modules` and
