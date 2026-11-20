@@ -176,7 +176,7 @@ non-generic.
 - The "in person" format is an assumption
 - Photos (the owner is looking for 2025 workshop photos)
 - Fix the repo problems listed above, then decide how 2027 gets built and deployed together with 2025 and the portal
-- Add a 2027 link to the portal
+- ~~Add a 2027 link to the portal~~ (done: `editions/portal/index.html` lists 2025 and 2027)
 
 ## Working with the owner
 

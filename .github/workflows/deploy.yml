@@ -1,0 +1,46 @@
+# Reusable: builds one site (optional) and pushes it to its GitHub Pages repo in the org.
+# Called by deploy-2025.yml, deploy-2027.yml and deploy-portal.yml.
+name: Deploy site
+
+on:
+  workflow_call:
+    inputs:
+      build-script:
+        description: Root npm script to run (e.g. build:2027). Empty = publish files as they are.
+        type: string
+        default: ""
+      publish-dir:
+        type: string
+        required: true
+      repository:
+        description: Target repo, e.g. icc-ras-workshop/2027
+        type: string
+        required: true
+    secrets:
+      deploy_key:
+        required: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - if: inputs.build-script != ''
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - if: inputs.build-script != ''
+        run: npm ci
+
+      - if: inputs.build-script != ''
+        run: npm run ${{ inputs.build-script }}
+
+      - uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.deploy_key }}
+          publish_dir: ${{ inputs.publish-dir }}
+          external_repository: ${{ inputs.repository }}
+          publish_branch: main

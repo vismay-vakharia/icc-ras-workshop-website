@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Robotics and Autonomous Systems Workshop | Indian Control Conference</title>
+    <meta name="description" content="Workshops on robotics and autonomous systems held at the Indian Control Conference: ICC 2027 at IIT Kharagpur and ICC 2025 at IISc Bengaluru." />
+    <link rel="canonical" href="https://icc-ras-workshop.github.io/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Robotics and Autonomous Systems Workshop at ICC" />
+    <meta property="og:description" content="Workshops on robotics and autonomous systems held at the Indian Control Conference." />
+    <meta property="og:url" content="https://icc-ras-workshop.github.io/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Hanken+Grotesk:wght@400;500;600&display=swap" rel="stylesheet" />
+    <!-- ponytail: plain HTML, no build step. Same palette and fonts as editions/2027/src/style.css. -->
+    <style>
+      :root {
+        --paper: #f4f6fa;
+        --ink: #17233f;
+        --muted: #5b6784;
+        --grid: #dbe1ec;
+        --signal: #2640e8;
+        --display: "Bricolage Grotesque", system-ui, sans-serif;
+        --sans: "Hanken Grotesk", system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        background: var(--paper);
+        color: var(--ink);
+        font: 400 1.0625rem/1.6 var(--sans);
+        -webkit-font-smoothing: antialiased;
+      }
+      main, footer { max-width: 60rem; margin: 0 auto; padding: 0 1.25rem; }
+      a { color: var(--signal); text-underline-offset: 3px; }
+      a:hover { text-decoration-thickness: 2px; }
+      :focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+
+      header { padding: 4.5rem 0 3rem; }
+      h1 {
+        font: 700 clamp(2.25rem, 6vw, 3.75rem)/1.05 var(--display);
+        letter-spacing: -0.02em;
+        margin: 0 0 1.25rem;
+        max-width: 16ch;
+      }
+      .lede { color: var(--muted); font-size: 1.1875rem; max-width: 40rem; margin: 0; }
+
+      h2 { font: 700 1.75rem/1.2 var(--display); margin: 0 0 0.5rem; }
+      ol { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--grid); }
+      li {
+        display: grid;
+        grid-template-columns: 9rem 1fr;
+        gap: 0.5rem 2rem;
+        padding: 2rem 0;
+        border-bottom: 1px solid var(--grid);
+      }
+      .year { font: 700 3.5rem/1 var(--display); letter-spacing: -0.03em; }
+      .year a { color: inherit; text-decoration: none; }
+      h3 { font: 600 1.375rem/1.3 var(--display); margin: 0 0 0.5rem; }
+      dl { display: grid; grid-template-columns: auto 1fr; gap: 0.15rem 1rem; margin: 0 0 1rem; }
+      dt { color: var(--muted); }
+      dd { margin: 0; font-weight: 500; }
+      .go { font-weight: 600; }
+      .status {
+        display: inline-block;
+        font-size: 0.875rem;
+        font-weight: 600;
+        color: var(--signal);
+        margin-bottom: 0.5rem;
+      }
+
+      footer { color: var(--muted); font-size: 0.9375rem; padding-top: 3rem; padding-bottom: 3rem; }
+
+      @media (max-width: 40rem) {
+        header { padding: 3rem 0 2rem; }
+        li { grid-template-columns: 1fr; padding: 1.5rem 0; }
+        .year { font-size: 2.75rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <header>
+        <h1>Robotics and Autonomous Systems Workshop</h1>
+        <p class="lede">
+          A workshop held with the
+          <a href="https://controlsociety.org/icc/">Indian Control Conference</a>,
+          bringing together control, robotics and learning researchers. Each edition has its own page.
+        </p>
+      </header>
+
+      <section aria-labelledby="editions">
+        <h2 id="editions">Editions</h2>
+        <ol reversed>
+          <li>
+            <div class="year"><a href="/2027/" tabindex="-1" aria-hidden="true">2027</a></div>
+            <div>
+              <span class="status">Upcoming</span>
+              <h3>Robotics and Autonomous Systems</h3>
+              <dl>
+                <dt>Conference</dt><dd>ICC 2027, 11–13 January 2027</dd>
+                <dt>Venue</dt><dd>IIT Kharagpur</dd>
+                <dt>Workshop day</dt><dd>To be announced</dd>
+              </dl>
+              <a class="go" href="/2027/">Go to the 2027 workshop</a>
+            </div>
+          </li>
+          <li>
+            <div class="year"><a href="/2025/" tabindex="-1" aria-hidden="true">2025</a></div>
+            <div>
+              <h3>Advances in AI-Driven Control and Estimation for Robotics and Autonomous Systems</h3>
+              <dl>
+                <dt>Conference</dt><dd>ICC 2025</dd>
+                <dt>Date</dt><dd>18 December 2025</dd>
+                <dt>Venue</dt><dd>IISc Bengaluru</dd>
+              </dl>
+              <a class="go" href="/2025/">Go to the 2025 workshop</a>
+            </div>
+          </li>
+        </ol>
+      </section>
+    </main>
+
+    <footer>
+      Part of the <a href="https://controlsociety.org/icc/">Indian Control Conference</a>.
+    </footer>
+  </body>
+</html>
