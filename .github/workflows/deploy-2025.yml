@@ -5,6 +5,8 @@ on:
     paths:
       - 'editions/2025/**'
       - '.github/workflows/deploy-2025.yml'
+      - 'package-lock.json'
+  workflow_dispatch:
 
 concurrency:
   group: deploy-2025

@@ -5,6 +5,8 @@ on:
     paths:
       - "editions/2027/**"
       - ".github/workflows/deploy-2027.yml"
+      - "package-lock.json"
+  workflow_dispatch:
 
 concurrency:
   group: deploy-2027
