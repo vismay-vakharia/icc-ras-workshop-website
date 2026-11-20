@@ -1,5 +1,6 @@
 import "./style.css";
 import { site, type Person } from "./content";
+import { startLidar } from './lidar';
 
 const { conference: conf, workshop: ws } = site;
 
@@ -13,76 +14,54 @@ const tba = (text: string) =>
 
 const section = (id: string, title: string, body: string) => `
   <section id="${id}" class="scroll-mt-14 border-t border-grid">
-    <div class="mx-auto grid max-w-5xl gap-6 px-5 py-14 md:grid-cols-[12rem_1fr] md:gap-12">
-      <h2 class="font-display text-2xl font-semibold tracking-tight">${title}</h2>
-      <div class="max-w-prose space-y-5 text-lg leading-relaxed">${body}</div>
+    <div class="mx-auto max-w-5xl px-5 py-16 sm:py-24">
+      <h2 class="font-display text-4xl font-bold tracking-tight sm:text-5xl">${title}</h2>
+      <div class="mt-8 space-y-5 text-lg leading-relaxed sm:mt-12">${body}</div>
     </div>
   </section>`;
 
 const people = (list: Person[], empty: string) =>
   list.length === 0
     ? tba(empty)
-    : `<ul class="grid gap-x-8 gap-y-6 sm:grid-cols-2">${list
-        .map(
-          (p) => `<li>
+    : `<ul class="grid gap-x-8 gap-y-8 sm:grid-cols-2 md:grid-cols-3">${list
+      .map(
+        (p) => `<li>
             <p class="font-display text-lg font-semibold">${p.url ? `<a class="${linkCls}" href="${p.url}">${p.name}</a>` : p.name}</p>
             <p class="text-muted">${[p.role, p.affiliation].filter(Boolean).join(", ")}</p>
           </li>`,
-        )
-        .join("")}</ul>`;
+      )
+      .join("")}</ul>`;
 
 const schedule = () =>
   site.schedule.length === 0
     ? tba("The schedule will be posted once sessions are confirmed.")
     : `<ol class="divide-y divide-grid">${site.schedule
-        .map(
-          (s) => `<li class="grid gap-1 py-3 sm:grid-cols-[8rem_1fr]">
+      .map(
+        (s) => `<li class="grid gap-1 py-3 sm:grid-cols-[8rem_1fr]">
             <span class="tabular-nums text-muted">${s.time}</span>
             <span><span class="font-semibold">${s.title}</span>${s.detail ? `<span class="block text-muted">${s.detail}</span>` : ""}</span>
           </li>`,
-        )
-        .join("")}</ol>`;
+      )
+      .join("")}</ol>`;
 
 const deadlines = () =>
   site.deadlines.length === 0
-    ? tba("Submission deadlines will be posted here.")
-    : `<dl class="divide-y divide-grid">${site.deadlines
-        .map(
-          (d) =>
-            `<div class="flex justify-between gap-4 py-3"><dt>${d.label}</dt><dd class="font-semibold">${d.date}</dd></div>`,
-        )
-        .join("")}</dl>`;
+    ? `<p class="rounded-md border border-dashed border-paper/30 px-4 py-3 text-paper/70">Submission deadlines will be posted here.</p>`
+    : `<dl class="divide-y divide-paper/20">${site.deadlines
+      .map((d) => `<div class="flex justify-between gap-4 py-3"><dt class="text-paper/80">${d.label}</dt><dd class="font-semibold">${d.date}</dd></div>`)
+      .join('')}</dl>`;
 
-// Step response of an underdamped second-order system: the classic control-systems plot.
-function stepResponse(): string {
-  const W = 800,
-    H = 280,
-    L = 36,
-    R = 96,
-    T = 20,
-    B = 36;
-  const zeta = 0.22,
-    tMax = 22,
-    yMax = 1.6;
-  const wd = Math.sqrt(1 - zeta * zeta);
-  const y = (t: number) => 1 - Math.exp(-zeta * t) * (Math.cos(wd * t) + (zeta / wd) * Math.sin(wd * t));
-  const sx = (t: number) => L + (t / tMax) * (W - L - R);
-  const sy = (v: number) => H - B - (v / yMax) * (H - T - B);
-  const pts = Array.from({ length: 221 }, (_, i) => `${sx(i / 10).toFixed(1)},${sy(y(i / 10)).toFixed(1)}`);
-  const tp = Math.PI / wd;
-  return `
-  <svg viewBox="0 0 ${W} ${H}" class="mt-10 block w-full" role="img"
-       aria-label="Step response of a second-order system: it rises, overshoots the reference, then settles.">
-    <line x1="${L}" y1="${T}" x2="${L}" y2="${H - B}" class="stroke-muted" stroke-width="1.5" />
-    <line x1="${L}" y1="${H - B}" x2="${W - R + 30}" y2="${H - B}" class="stroke-muted" stroke-width="1.5" />
-    <line x1="${L}" y1="${sy(1)}" x2="${W - R + 10}" y2="${sy(1)}" class="stroke-muted" stroke-width="1.5" stroke-dasharray="6 6" />
-    <text x="${W - R + 16}" y="${sy(1) + 5}" class="fill-muted" font-size="15">reference</text>
-    <text x="${W - R + 34}" y="${H - B + 5}" class="fill-muted" font-size="15">time</text>
-    <path d="M${pts.join(" L")}" pathLength="1" class="curve stroke-signal" fill="none" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
-    <circle cx="${sx(tp)}" cy="${sy(y(tp))}" r="6" class="fill-peak" />
-    <text x="${sx(tp) + 14}" y="${sy(y(tp)) + 5}" class="fill-ink" font-size="15">overshoot</text>
-  </svg>`;
-}
+const submitBand = () => `
+  <section id="submit" class="on-ink scroll-mt-14 bg-ink text-paper">
+    <div class="mx-auto grid max-w-5xl gap-10 px-5 py-16 sm:py-24 md:grid-cols-[1fr_20rem] md:items-end md:gap-16">
+      <div>
+        <h2 class="font-display text-5xl font-bold tracking-tight sm:text-6xl">Submit your work</h2>
+        <p class="mt-6 max-w-prose text-lg leading-relaxed text-paper/80">Student submissions are collected on OpenReview. You will need an OpenReview account to submit.</p>
+        <a class="${btn} mt-8 bg-paper text-ink hover:bg-grid" href="${site.openreview}" target="_blank" rel="noopener">Open the OpenReview venue</a>
+      </div>
+      <div>${deadlines()}</div>
+    </div>
+  </section>`;
 
 const nav = [
   ["about", "About"],
@@ -107,10 +86,11 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
   </header>
 
   <main>
-    <section id="top" class="graph-paper">
-      <div class="mx-auto max-w-5xl px-5 pt-14 sm:pt-20">
+    <section id="top" class="relative overflow-hidden">
+      <canvas id="scan" aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full"></canvas>
+      <div class="relative mx-auto max-w-5xl px-5 pb-14 pt-14 sm:pb-20 sm:pt-20">
         <p class="text-lg text-muted"><a class="${linkCls}" href="${conf.url}">${conf.name}</a> workshop</p>
-        <h1 class="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl">${ws.title}</h1>
+        <h1 id="title" class="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl">${ws.title.split(' ').map((w) => `<span class="word">${w}</span>`).join(' ')}</h1>
         <dl class="mt-10 grid gap-6 sm:grid-cols-3">
           ${fact("Date", ws.date, ws.dateNote)}
           ${fact("Venue", ws.venue, ws.venueNote)}
@@ -120,27 +100,19 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
           <a class="${primary}" href="${site.openreview}" target="_blank" rel="noopener">Submit on OpenReview</a>
           <a class="${secondary}" href="#about">About the workshop</a>
         </div>
-        ${stepResponse()}
       </div>
     </section>
 
-    ${section(
-      "about",
-      "About",
-      `
-      ${site.about.map((p) => `<p>${p}</p>`).join("")}
-      <h3 class="pt-2 font-display text-lg font-semibold">Topics of interest</h3>
-      <ul class="list-disc space-y-1 pl-5 marker:text-signal">${site.topics.map((t) => `<li>${t}</li>`).join("")}</ul>`,
-    )}
+    ${section('about', 'About', `
+      <div class="grid gap-10 md:grid-cols-2 md:gap-16">
+        <div class="space-y-5">${site.about.map((p) => `<p>${p}</p>`).join('')}</div>
+        <div>
+          <h3 class="font-display text-lg font-semibold">Topics of interest</h3>
+          <ul class="mt-3 list-disc space-y-1 pl-5 marker:text-signal">${site.topics.map((t) => `<li>${t}</li>`).join('')}</ul>
+        </div>
+      </div>`)}
 
-    ${section(
-      "submit",
-      "Submit",
-      `
-      <p>Student submissions are collected on OpenReview. You will need an OpenReview account to submit.</p>
-      ${deadlines()}
-      <p><a class="${primary}" href="${site.openreview}" target="_blank" rel="noopener">Open the OpenReview venue</a></p>`,
-    )}
+    ${submitBand()}
 
     ${section("program", "Program", schedule())}
     ${section("speakers", "Speakers", people(site.speakers, "Invited speakers will be announced here."))}
@@ -156,3 +128,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
       </p>
     </div>
   </footer>`;
+
+startLidar(
+  document.querySelector<HTMLElement>('#top')!,
+  document.querySelector<HTMLCanvasElement>('#scan')!,
+  document.querySelector<HTMLElement>('#title')!,
+);

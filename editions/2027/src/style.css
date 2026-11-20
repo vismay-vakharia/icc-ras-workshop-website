@@ -14,6 +14,7 @@
 body {
   @apply bg-paper font-sans text-ink antialiased;
 }
+
 :focus-visible {
   outline: 3px solid var(--color-signal);
   outline-offset: 3px;
@@ -25,28 +26,13 @@ body {
   }
 }
 
-/* Graph-paper backdrop for the hero */
-.graph-paper {
-  background-image:
-    linear-gradient(var(--color-grid) 1px, transparent 1px),
-    linear-gradient(90deg, var(--color-grid) 1px, transparent 1px);
-  background-size: 48px 48px;
-}
-
-/* The step response draws itself once on load */
-.curve {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: draw 2.4s cubic-bezier(0.3, 0.6, 0.3, 1) 0.3s forwards;
-}
-@keyframes draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
 @media (prefers-reduced-motion: reduce) {
   .curve {
     animation: none;
     stroke-dashoffset: 0;
   }
+}
+
+.on-ink :focus-visible {
+  outline-color: var(--color-paper);
 }
