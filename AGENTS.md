@@ -90,7 +90,7 @@ Vite + TypeScript + Tailwind CSS v4, static output, no framework. Keep it as sim
 - `src/content.ts`: all text, dates, links, deadlines, schedule, speakers, organizers. Empty lists render a
   "to be announced" note, so add entries as decisions are made.
 - `src/main.ts`: builds the page as HTML template strings (header, hero, sections, footer), then calls `startLidar`.
-- `src/lidar.ts`: the hero animation (see below).
+- `src/lidar.ts`: the lidar background animation (see below).
 - `src/style.css`: Tailwind import and theme tokens (colors, fonts).
 - `vite.config.ts`: `base: './'` and the Tailwind plugin.
 
@@ -103,30 +103,42 @@ Vite + TypeScript + Tailwind CSS v4, static output, no framework. Keep it as sim
   `abstracts.html`, matching 2025) unless there's a reason not to.
 - **Hero background is plain.** A graph-paper grid was removed because it hurt readability of the date, venue and
   format row. Don't put a busy background behind that row.
-- **Submit is a dark full-width band** with its own focus ring (`.on-ink` in the CSS). Section headings are large and
-  sit above their content. The people lists are three columns on wide screens.
+- **Submit is a light section** like the others (it was a dark full-width band, but that cut the lidar background in
+  two). Section headings are large and sit above their content. The people lists are three columns on wide screens.
 - **Fonts:** Bricolage Grotesque (display) and Hanken Grotesk (body), loaded from Google Fonts in `index.html`.
-- **Palette** (in `src/style.css`): paper `#f4f6fa`, ink `#17233f`, signal blue `#2640e8`, muted `#5b6784`,
-  grid `#dbe1ec`.
+- **Palette** (in `src/style.css`, "graphite + orange"): paper `#f3f3f1`, ink `#1f2328`, muted `#646a73`,
+  grid `#dcdcd8`, signal `#c2410c` (UI accent: buttons, links, focus; text-safe), lidar `#f26b1d` (canvas only:
+  rays, points, sensor). On the canvas, planning (RRT tree, route, goal) and the robot body are drawn in ink.
 - **Hero:** the lidar scan replaced an earlier step-response plot (see "Hero and demo ideas" for the plot's details).
 
-### Hero: lidar scan (built)
+### Lidar background (built)
 
-A small robot scans the headline with lidar. Rays bounce off the letters and leave points that fade out.
+One small wheeled robot scans the whole page with lidar, builds a map, and plans its own trips with RRT. The obstacles
+are the page's text blocks (`BLOCKS` selector: headings, paragraphs, list items, facts, buttons), padded by `PAD`.
+The title letters themselves are not obstacles. There is no pointer interaction; the robot is fully autonomous.
 
-- The `<h1 id="title">` stays real text, with each word wrapped in `<span class="word">`. The canvas `#scan` sits
-  inside `<section id="top">`, is decoration only (`aria-hidden`, `pointer-events-none`).
-- The headline is drawn word by word onto a hidden canvas; its pixels are the walls the rays hit.
-- Everything runs on elapsed time, so it looks the same at 60 Hz and 120 Hz.
-- The robot patrols on its own and follows the pointer for about 4 s after it moves.
-- It pauses when the hero is off screen, and rebuilds on resize and after the web font loads.
-- With `prefers-reduced-motion`, it shows one static scan instead of animating.
-- Tuning constants are at the top of `lidar.ts`: `SPEED` (rad/s), `RAYS_PER_SEC`, `TRAIL`, `LIFE`, `RANGE`,
-  `MISS_LEN`, `SHOW_RAYS`.
-- History: the first version was too fast, sparse and only drew rays that hit something. The current version turns
-  once per ~3 s, casts ~700 rays/s, draws faint rays for misses, and keeps points for 5 s. It was type-checked and
-  built in the chat but not judged in a browser, so expect another round of tuning.
-- Possible small upgrade: draw a short trail behind the robot.
+- The canvas `#scan` is `fixed` behind the page (`-z-10`, `aria-hidden`, `pointer-events-none`). The map is a
+  page-sized grid in page coordinates, drawn with a `scrollY` offset, so it scrolls with the content.
+- Hits snap to a `CELL` px grid, flash briefly, and fade over `LIFE`. Every ray ends at `RANGE` or at an obstacle,
+  with a faint dashed range ring.
+- Planning: a random goal on screen (at least half a screen away); an RRT grows toward it at `GROW` samples/s with
+  `STEP` px edges (gives up after `MAX_NODES`); the path is shortcut to line-of-sight waypoints; the tree fades over
+  `FADE` ms and the remaining route is drawn dashed with a goal marker. The planner uses the true block mask, not the
+  lidar map.
+- Collision: the planner uses a second grid grown by the robot radius `BODY` (configuration space), so the whole body
+  stays off the blocks, not just its center. Narrow gaps (under about 2 * (`PAD` + `BODY`)) are closed to it.
+- The tree grows slowly (`GROW` samples/s) so it can be watched; the finished path is shown for `HOLD` ms first.
+- Driving: unicycle go-to-goal on each waypoint, turn rate capped at `TURN`, speed up to `CRUISE`, near zero unless
+  roughly facing the waypoint (so it turns in place at corners). Drawn as a differential-drive robot (chassis, two
+  wheels, lidar puck with a beam tick) with a short trail.
+- Scrolling: there is no respawning. `SETTLE` ms after scrolling stops, a goal that went off screen is dropped and a
+  new on-screen goal is planned; the tree samples the band from the robot to the screen, so an off-screen robot plans
+  its way back in, driving `RETURN` times faster while off screen. If it is more than a screen away (nav-link jumps),
+  it is moved just outside the nearest screen edge first, so it always drives in from the edge.
+- The goal is an orange ring with a cross; two rings pulse out when a new goal is placed.
+- Everything runs on elapsed time. It rebuilds (and clears the map) on resize, page height change, and font load.
+- With `prefers-reduced-motion`, there's one static scan per screen height of page and no animation.
+- Tuning constants are at the top of `lidar.ts`.
 
 ## Hero and demo ideas (not built, for later)
 

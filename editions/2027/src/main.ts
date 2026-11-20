@@ -46,18 +46,18 @@ const schedule = () =>
 
 const deadlines = () =>
   site.deadlines.length === 0
-    ? `<p class="rounded-md border border-dashed border-paper/30 px-4 py-3 text-paper/70">Submission deadlines will be posted here.</p>`
-    : `<dl class="divide-y divide-paper/20">${site.deadlines
-      .map((d) => `<div class="flex justify-between gap-4 py-3"><dt class="text-paper/80">${d.label}</dt><dd class="font-semibold">${d.date}</dd></div>`)
+    ? tba("Submission deadlines will be posted here.")
+    : `<dl class="divide-y divide-grid">${site.deadlines
+      .map((d) => `<div class="flex justify-between gap-4 py-3"><dt class="text-muted">${d.label}</dt><dd class="font-semibold">${d.date}</dd></div>`)
       .join('')}</dl>`;
 
 const submitBand = () => `
-  <section id="submit" class="on-ink scroll-mt-14 bg-ink text-paper">
+  <section id="submit" class="scroll-mt-14 border-t border-grid">
     <div class="mx-auto grid max-w-5xl gap-10 px-5 py-16 sm:py-24 md:grid-cols-[1fr_20rem] md:items-end md:gap-16">
       <div>
         <h2 class="font-display text-5xl font-bold tracking-tight sm:text-6xl">Submit your work</h2>
-        <p class="mt-6 max-w-prose text-lg leading-relaxed text-paper/80">Student submissions are collected on OpenReview. You will need an OpenReview account to submit.</p>
-        <a class="${btn} mt-8 bg-paper text-ink hover:bg-grid" href="${site.openreview}" target="_blank" rel="noopener">Open the OpenReview venue</a>
+        <p class="mt-6 max-w-prose text-lg leading-relaxed text-muted">Student submissions are collected on OpenReview. You will need an OpenReview account to submit.</p>
+        <a class="${primary} mt-8" href="${site.openreview}" target="_blank" rel="noopener">Open the OpenReview venue</a>
       </div>
       <div>${deadlines()}</div>
     </div>
@@ -75,6 +75,7 @@ const fact = (label: string, value: string, note: string) => `
   <div><dt class="text-muted">${label}</dt><dd class="text-xl font-semibold">${value}</dd><dd class="text-muted">${note}</dd></div>`;
 
 document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+  <canvas id="scan" aria-hidden="true" class="pointer-events-none fixed inset-0 -z-10 h-full w-full"></canvas>
   <header class="sticky top-0 z-10 border-b border-grid bg-paper/90 backdrop-blur">
     <div class="mx-auto flex max-w-5xl items-center justify-between gap-4 px-5 py-2.5">
       <a href="#top" class="font-display font-bold">${conf.short} RAS Workshop</a>
@@ -87,10 +88,9 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
 
   <main>
     <section id="top" class="relative overflow-hidden">
-      <canvas id="scan" aria-hidden="true" class="pointer-events-none absolute inset-0 h-full w-full"></canvas>
       <div class="relative mx-auto max-w-5xl px-5 pb-14 pt-14 sm:pb-20 sm:pt-20">
         <p class="text-lg text-muted"><a class="${linkCls}" href="${conf.url}">${conf.name}</a> workshop</p>
-        <h1 id="title" class="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl">${ws.title.split(' ').map((w) => `<span class="word">${w}</span>`).join(' ')}</h1>
+        <h1 id="title" class="mt-3 max-w-3xl font-display text-5xl font-bold leading-[0.98] tracking-tight sm:text-7xl">${ws.title}</h1>
         <dl class="mt-10 grid gap-6 sm:grid-cols-3">
           ${fact("Date", ws.date, ws.dateNote)}
           ${fact("Venue", ws.venue, ws.venueNote)}
@@ -129,8 +129,4 @@ document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
     </div>
   </footer>`;
 
-startLidar(
-  document.querySelector<HTMLElement>('#top')!,
-  document.querySelector<HTMLCanvasElement>('#scan')!,
-  document.querySelector<HTMLElement>('#title')!,
-);
+startLidar(document.querySelector<HTMLCanvasElement>('#scan')!);

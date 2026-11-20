@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
 @theme {
-  --color-paper: #f4f6fa;
-  --color-ink: #17233f;
-  --color-muted: #5b6784;
-  --color-grid: #dbe1ec;
-  --color-signal: #2640e8;
-  --color-peak: #f0a500;
+  --color-paper: #f3f3f1;
+  --color-ink: #1f2328;
+  --color-muted: #646a73;
+  --color-grid: #dcdcd8;
+  --color-signal: #c2410c; /* UI accent: buttons, links, focus; white text on it is about 5:1 */
+  --color-lidar: #f26b1d; /* canvas only: lidar rays, points, sensor */
   --font-display: "Bricolage Grotesque", system-ui, sans-serif;
   --font-sans: "Hanken Grotesk", system-ui, sans-serif;
 }
@@ -31,8 +31,4 @@ body {
     animation: none;
     stroke-dashoffset: 0;
   }
-}
-
-.on-ink :focus-visible {
-  outline-color: var(--color-paper);
 }
